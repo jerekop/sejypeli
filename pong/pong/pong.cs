@@ -14,6 +14,13 @@ public class pong : PhysicsGame
     PhysicsObject pallo;
     PhysicsObject maila1;
     PhysicsObject maila2;
+
+    PhysicsObject vasenreuna;
+    PhysicsObject oikeareuna;
+
+    IntMeter pelaajan1pisteet;
+    IntMeter pelaajan2pisteet;
+
     public override void Begin()
     {
         // TODO: Kirjoita ohjelmakoodisi tähän
@@ -22,6 +29,7 @@ public class pong : PhysicsGame
         LuoKentta();
         AloitaPeli();
         aseteohjaimet();
+        LisääLaskurit();
 
     }
     void LuoKentta()
@@ -32,8 +40,19 @@ public class pong : PhysicsGame
         pallo.Y = 0.0;
         pallo.Restitution = 1.0;
         Add(pallo);
-        Level.CreateBorders(1.0, false);
+
+        vasenreuna = Level.CreateLeftBorder();
+        vasenreuna.Restitution = 1.0;
+        vasenreuna.KineticFriction = 0.0;
+        vasenreuna.IsVisible = false;
+
+        oikeareuna = Level.CreateLeftBorder();
+        oikeareuna.Restitution = 1.0;
+        oikeareuna.KineticFriction = 0.0;
+        oikeareuna.IsVisible = false;
         Level.Background.Color = Color.Black;
+
+        AddCollisionHandler(pallo, KasittelePallonTormays);
 
 
         maila1 = LuoMaila(Level.Left + 20.0, 0.0);
@@ -94,11 +113,45 @@ public class pong : PhysicsGame
         {
             maila.Velocity = Vector.Zero;
             return;
-
         }
 
-        maila.Velocity = nopeus;
 
+        maila.Velocity = nopeus;
+    }
+
+    void LisääLaskurit()
+    {
+        pelaajan1pisteet = LuoPisteLaskuri(Screen.Left + 100.0, Screen.Top - 100.0);
+        pelaajan2pisteet = LuoPisteLaskuri(Screen.Right - 100.0, Screen.Top - 100.0);
+    }
+
+
+    IntMeter LuoPisteLaskuri(double x, double y)
+    {
+        IntMeter laskuri = new IntMeter(0);
+        laskuri.MaxValue = 10;
+
+        Label naytto = new Label();
+        naytto.BindTo(laskuri);
+        naytto.X = x;
+        naytto.Y = y;
+        naytto.TextColor = Color.White;
+        naytto.BorderColor = Level.Background.Color;
+        naytto.Color = Level.Background.Color;
+        Add(naytto);
+
+        return laskuri;
+    }
+    void KasittelePallonTormays(PhysicsObject pallo, PhysicsObject kohde)
+    {
+        if (kohde == oikeareuna)
+        {
+            pelaajan1pisteet.Value += 1;
+        }
+        else if (kohde == vasenreuna)
+        {
+            pelaajan2pisteet.Value += 1;
+        }
     }
 }
-    
+
