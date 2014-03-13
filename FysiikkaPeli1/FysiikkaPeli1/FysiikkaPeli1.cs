@@ -7,109 +7,138 @@ using Jypeli.Effects;
 using Jypeli.Widgets;
 
 public class FysiikkaPeli1 : PhysicsGame
-{
-    Tank tankki1;
-    Tank Tankki2;
-    Vector vauhti1;
-    Vector vauhti2;
+{  PhysicsObject Pelaaja;
+PhysicsObject pallo;
+    
+
+
+   
+
+
+
+
+
+
+
+     void PelaajaAlas()
+    {
+         Pelaaja.Hit(new Vector(0, -600));
+    }
+
+
+     void PelaajaVasemmalle()
+     {
+         Pelaaja.Hit(new Vector(-500, 0));
+     }
+
+
+     void PelaajaOikealle()
+     {
+         Pelaaja.Hit(new Vector(500, 0));
+     }
+
+
+
+    void PelaajaYlos()
+    {
+        Pelaaja.Hit(new Vector(0, 600));
+    }
+
+    void LuoKentta()
+    {
+        Level.CreateBorders();
+
+        
+    }
+
+
+
+    void LuoPallo()
+    {
+       /* Vector isku1 = new Vector(100, 100);
+        Vector isku2 = new Vector(100, 100);
+        Vector isku3 = new Vector(100, 100);
+        Vector isku4 = new Vector(100, 100);
+        Vector isku5 = new Vector(100, 100);
+        Vector isku6 = new Vector(100, 100);
+        Vector isku7 = new Vector(100, 100);
+        Vector isku8 = new Vector(100, 100);
+        Vector isku9 = new Vector(100, 100);*/
+        for (int i = 0; i < 9; i++)   
+        {
+
+
+            pallo = new PhysicsObject(50, 50);
+            Vector Suunta = Vector.FromLengthAndAngle(500, pallo.Angle);
+
+            pallo.Hit(Suunta);
+            pallo.Position = RandomGen.NextVector(100, 500);
+            pallo.Velocity = RandomGen.NextVector(100, 500);
+            pallo.Shape = Shape.Circle;
+            pallo.Tag = "pallo";
+            pallo.KineticFriction = 0.0;
+            pallo.Restitution = 1.0;
+            Add(pallo);
+
+
+
+
+
+            
+
+
+        }
+    }
+
+
+
 
     public override void Begin()
     {
-        LuoKentta();
-
-        LuoTankki1();
-        LuoTankki2();
-        AsetaOhjaimet();
-        ammutankki1();
-        ammuTankki2();
-
-        vauhti1 = new Vector(-90, 0);
-        vauhti2 = new Vector(90, 0);
-
         // TODO: Kirjoita ohjelmakoodisi tähän
-        Level.CreateBottomBorder();
+
+        Keyboard.Listen(Key.Up, ButtonState.Down, PelaajaYlos, "PelaajaMeneeYlos");
+        Keyboard.Listen(Key.Down, ButtonState.Down, PelaajaAlas, "PelaajaMeneeAlas");
+        Keyboard.Listen(Key.Left, ButtonState.Down, PelaajaVasemmalle, "PelaajaMeneevasemmalle");
+        Keyboard.Listen(Key.Right, ButtonState.Down, PelaajaOikealle, "PelaajaMeneeOikealle");
+        
+
+        Pelaaja = new PhysicsObject(20.0, 20.0);
+        Pelaaja.Shape = Shape.Circle;
+        Pelaaja.Color = Color.BloodRed;
+        Add(Pelaaja);
+
+        Pelaaja.Mass = 80;
+
+        PelaajaYlos();
+        LuoPallo();
+        LuoKentta();
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
 
 
-    }
 
-    void LuoKentta()
+        Camera.ZoomToLevel();
+
+        AddCollisionHandler(Pelaaja, PelaajaTormaa);
+
+
+
+
+    }
+    void PelaajaTormaa(PhysicsObject Tormaaja, PhysicsObject Kohde)
     {
-        Level.CreateBottomBorder();
-        Gravity = new Vector(0, -1500);
-        Level.CreateBorders();
+        if (Kohde.Tag == "pallo")
+        {
 
+
+            Explosion rajahdys = new Explosion(50);
+            rajahdys.Position = Pelaaja.Position;
+            Add(rajahdys);
+            Pelaaja.IgnoresExplosions = true;
+            Kohde.Destroy();
+            Tormaaja.Destroy();
+        }
     }
-    void LuoTankki1()
-    {
-        tankki1 = new Tank(200, 70);
-        Add(tankki1);
-        tankki1.Y = -250;
-        tankki1.X = 350;
-        tankki1.Mass = 1000;
-        tankki1.Cannon.Angle = Angle.FromDegrees(120);
-        Add(tankki1);
-    }
-    void LuoTankki2()
-    {
-        Tankki2 = new Tank(200, 70);
-        Tankki2.Y = -150;
-        Tankki2.X = 250;
-        Tankki2.Mass = 1000;
-        Tankki2.Cannon.Angle = Angle.FromDegrees(120);
-        Add(Tankki2);
-    }
-
-    void LiikutaTankki2Vasen()
-    {
-        Tankki2.Velocity = Tankki2.Velocity + vauhti1;
-    }
-
-    void LiikutaTankki1Oikea()
-    {
-        tankki1.Velocity = tankki1.Velocity + vauhti1;
-    }
-
-    void Liikutatankki1Vasen()
-    {
-        tankki1.Velocity = tankki1.Velocity + vauhti2;
-    }
-
-    void LiikutaTankki2Oikea()
-    {
-        Tankki2.Velocity = Tankki2.Velocity + vauhti2;
-    }
-    void AsetaOhjaimet()
-    {
-        Keyboard.Listen(Key.Escape, ButtonState.Pressed, Exit, "Poistu");
-
-        Keyboard.Listen(Key.Left, ButtonState.Down, LiikutaTankki2Vasen, null);
-        Keyboard.Listen(Key.Right, ButtonState.Down, LiikutaTankki2Oikea, null);
-
-        Keyboard.Listen(Key.S, ButtonState.Down, Liikutatankki1Vasen, null);
-        Keyboard.Listen(Key.A, ButtonState.Down, LiikutaTankki1Oikea, null);
-
-        Keyboard.Listen(Key.LeftShift, ButtonState.Down, keulitankki1, null);
-
-        Keyboard.Listen(Key.Space, ButtonState.Down, Ammu, null, tankki1 1
-
-    }
-    void keulitankki1()
-    {
-        tankki1.ApplyTorque(200000000);
-    }
-
-    void ammutankki1()
-    {
-        tankki1.Shoot(50000);
-    }
-
-    void ammuTankki2()
-    {
-        Tankki2.Shoot(50000);
-    }
-
 }
-

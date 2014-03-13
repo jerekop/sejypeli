@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{A3FF3636-FCB9-4D27-A203-A37333D1595E}</ProjectGuid>
+    <ProjectGuid>{7C8E76A9-5785-4768-B977-2568C0D1067A}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -14,10 +14,12 @@
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaProfile>Reach</XnaProfile>
-    <XnaCrossPlatformGroupID>fb8158c4-eaa1-4697-84c4-925e743f5d72</XnaCrossPlatformGroupID>
+    <XnaCrossPlatformGroupID>93af7236-d250-4b55-baf0-d72491f937f5</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ReferencePath>$(registry:HKEY_LOCAL_MACHINE\Software\Jypeli@Install_Dir)\lib\x86</ReferencePath>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,10 +32,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ReferencePath>$(registry:HKEY_LOCAL_MACHINE\Software\Jypeli@Install_Dir)\lib\x86</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
