@@ -7,18 +7,26 @@ using Jypeli.Effects;
 using Jypeli.Widgets;
 
 public class FysiikkaPeli1 : PhysicsGame
-{  PhysicsObject Pelaaja;
-PhysicsObject pallo;
-    
+{  
+    PhysicsObject Pelaaja;
+  PhysicsObject pallo;
 
+    AssaultRifle PelaajanAse;
 
-   
+    void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
+    {
+        if (kohde.Tag == "pallo")
+        {
+            ammus.Destroy();
+            kohde.Destroy();
+        }
+        ammus.Destroy();
+    }
 
-
-
-
-
-
+    void AmmuAseella()
+    {
+        PelaajanAse.Shoot();
+    }
 
      void PelaajaAlas()
     {
@@ -28,13 +36,13 @@ PhysicsObject pallo;
 
      void PelaajaVasemmalle()
      {
-         Pelaaja.Hit(new Vector(-500, 0));
+         Pelaaja.Hit(new Vector(-600, 0));
      }
 
 
      void PelaajaOikealle()
      {
-         Pelaaja.Hit(new Vector(500, 0));
+         Pelaaja.Hit(new Vector(600, 0));
      }
 
 
@@ -47,8 +55,6 @@ PhysicsObject pallo;
     void LuoKentta()
     {
         Level.CreateBorders();
-
-        
     }
 
 
@@ -81,27 +87,11 @@ PhysicsObject pallo;
             Add(pallo);
 
 
-
-
-
-            
-
-
         }
     }
-
-
-
-
     public override void Begin()
     {
         // TODO: Kirjoita ohjelmakoodisi tähän
-
-        Keyboard.Listen(Key.Up, ButtonState.Down, PelaajaYlos, "PelaajaMeneeYlos");
-        Keyboard.Listen(Key.Down, ButtonState.Down, PelaajaAlas, "PelaajaMeneeAlas");
-        Keyboard.Listen(Key.Left, ButtonState.Down, PelaajaVasemmalle, "PelaajaMeneevasemmalle");
-        Keyboard.Listen(Key.Right, ButtonState.Down, PelaajaOikealle, "PelaajaMeneeOikealle");
-        
 
         Pelaaja = new PhysicsObject(20.0, 20.0);
         Pelaaja.Shape = Shape.Circle;
@@ -110,28 +100,36 @@ PhysicsObject pallo;
 
         Pelaaja.Mass = 80;
 
+
+
+         PelaajanAse = new AssaultRifle(30, 10);
+
+        PelaajanAse.Ammo.Value = 500;
+
+        PelaajanAse.ProjectileCollision = AmmusOsui;
+        Pelaaja.Add(PelaajanAse);
+
+
         PelaajaYlos();
         LuoPallo();
         LuoKentta();
 
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
-
-
+        Keyboard.Listen(Key.Up, ButtonState.Down, PelaajaYlos, "PelaajaMeneeYlos");
+        Keyboard.Listen(Key.Down, ButtonState.Down, PelaajaAlas, "PelaajaMeneeAlas");
+        Keyboard.Listen(Key.Left, ButtonState.Down, PelaajaVasemmalle, "PelaajaMeneevasemmalle");
+        Keyboard.Listen(Key.Right, ButtonState.Down, PelaajaOikealle, "PelaajaMeneeOikealle");
+        Keyboard.Listen(Key.Space, ButtonState.Down, AmmuAseella, "ammu");
 
         Camera.ZoomToLevel();
 
         AddCollisionHandler(Pelaaja, PelaajaTormaa);
-
-
-
-
     }
     void PelaajaTormaa(PhysicsObject Tormaaja, PhysicsObject Kohde)
     {
         if (Kohde.Tag == "pallo")
         {
-
 
             Explosion rajahdys = new Explosion(50);
             rajahdys.Position = Pelaaja.Position;
