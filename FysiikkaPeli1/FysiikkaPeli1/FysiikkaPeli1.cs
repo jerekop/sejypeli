@@ -7,11 +7,17 @@ using Jypeli.Effects;
 using Jypeli.Widgets;
 
 public class FysiikkaPeli1 : PhysicsGame
-{  
+{
     PhysicsObject Pelaaja;
-  PhysicsObject pallo;
+    PhysicsObject pallo;
 
     AssaultRifle PelaajanAse;
+
+
+    Image taustaKuva = LoadImage("nimellinen");
+    
+   
+ 
 
     void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
@@ -28,22 +34,22 @@ public class FysiikkaPeli1 : PhysicsGame
         PelaajanAse.Shoot();
     }
 
-     void PelaajaAlas()
+    void PelaajaAlas()
     {
-         Pelaaja.Hit(new Vector(0, -600));
+        Pelaaja.Hit(new Vector(0, -600));
     }
 
 
-     void PelaajaVasemmalle()
-     {
-         Pelaaja.Hit(new Vector(-600, 0));
-     }
+    void PelaajaVasemmalle()
+    {
+        Pelaaja.Hit(new Vector(-600, 0));
+    }
 
 
-     void PelaajaOikealle()
-     {
-         Pelaaja.Hit(new Vector(600, 0));
-     }
+    void PelaajaOikealle()
+    {
+        Pelaaja.Hit(new Vector(600, 0));
+    }
 
 
 
@@ -54,57 +60,63 @@ public class FysiikkaPeli1 : PhysicsGame
 
     void LuoKentta()
     {
-        Level.CreateBorders();
+        Level.CreateBorders(false);
     }
 
 
 
     void LuoPallo()
     {
-       /* Vector isku1 = new Vector(100, 100);
-        Vector isku2 = new Vector(100, 100);
-        Vector isku3 = new Vector(100, 100);
-        Vector isku4 = new Vector(100, 100);
-        Vector isku5 = new Vector(100, 100);
-        Vector isku6 = new Vector(100, 100);
-        Vector isku7 = new Vector(100, 100);
-        Vector isku8 = new Vector(100, 100);
-        Vector isku9 = new Vector(100, 100);*/
-        for (int i = 0; i < 9; i++)   
+        
+        for (int i = 0; i < 9; i++)
         {
 
 
-            pallo = new PhysicsObject(50, 50);
+            pallo = new PhysicsObject(70, 70);
             Vector Suunta = Vector.FromLengthAndAngle(500, pallo.Angle);
 
             pallo.Hit(Suunta);
-            pallo.Position = RandomGen.NextVector(100, 500);
+            pallo.Position = RandomGen.NextVector(200, 500);
             pallo.Velocity = RandomGen.NextVector(100, 500);
             pallo.Shape = Shape.Circle;
             pallo.Tag = "pallo";
             pallo.KineticFriction = 0.0;
             pallo.Restitution = 1.0;
-            Add(pallo);
+            
+            pallo.Image = LoadImage("pallo");  
 
+
+
+
+
+
+
+
+            Add(pallo); 
 
         }
     }
     public override void Begin()
     {
         // TODO: Kirjoita ohjelmakoodisi tähän
+        IsFullScreen = true;
+        Level.Background.Image = taustaKuva;
+        Level.Background.FitToLevel();
 
-        Pelaaja = new PhysicsObject(20.0, 20.0);
+
+        Pelaaja = new PhysicsObject(70.0, 70.0);
         Pelaaja.Shape = Shape.Circle;
         Pelaaja.Color = Color.BloodRed;
+        Pelaaja.Image = LoadImage("pelaaja");
         Add(Pelaaja);
 
-        Pelaaja.Mass = 80;
+        Pelaaja.Mass = 80;  
 
 
 
-         PelaajanAse = new AssaultRifle(30, 10);
+        PelaajanAse = new AssaultRifle(30, 10);
 
-        PelaajanAse.Ammo.Value = 500;
+        PelaajanAse.Ammo.Value = 9065;
 
         PelaajanAse.ProjectileCollision = AmmusOsui;
         Pelaaja.Add(PelaajanAse);
@@ -135,8 +147,11 @@ public class FysiikkaPeli1 : PhysicsGame
             rajahdys.Position = Pelaaja.Position;
             Add(rajahdys);
             Pelaaja.IgnoresExplosions = true;
-            Kohde.Destroy();
+
             Tormaaja.Destroy();
         }
     }
 }
+
+
+
