@@ -8,13 +8,16 @@ using Jypeli.Widgets;
 
 public class FysiikkaPeli1 : PhysicsGame
 {
+   
     PhysicsObject Pelaaja;
     PhysicsObject pallo;
     Timer aikaLaskuri;
     AssaultRifle PelaajanAse;
 
+
     
-    Image taustaKuva = LoadImage("gg wp");
+
+     Image taustaKuva = LoadImage("gg wp");
     void AmmusOsui(PhysicsObject ammus, PhysicsObject kohde)
     {
         if (kohde.Tag == "pallo")
@@ -27,19 +30,6 @@ public class FysiikkaPeli1 : PhysicsGame
     void AmmuAseella()
     {
         PelaajanAse.Shoot();
-    }
-
-    void LuoaikaLaskuri()
-    {
-        Timer aikaLaskuri = new Timer();
-        aikaLaskuri.Start();
-
-        Label aikaNayttö = new Label();
-        aikaNayttö.TextColor = Color.White;
-        aikaNayttö.DecimalPlaces = 1;
-        aikaNayttö.BindTo(aikaLaskuri.SecondCounter);
-        Add(aikaNayttö);
-        
     }
 
     
@@ -83,7 +73,7 @@ public class FysiikkaPeli1 : PhysicsGame
             pallo.Tag = "pallo";
             pallo.KineticFriction = 0.0;
             pallo.Restitution = 1.0;
-            pallo.Image = LoadImage("pallo");
+            pallo.Image = LoadImage("popopo");
             Add(pallo);
         }
 
@@ -95,28 +85,28 @@ public class FysiikkaPeli1 : PhysicsGame
     public override void Begin()
     {
 
-
+        MessageDisplay.Add("tervetuloa");
         
 
        // TODO: Kirjoita ohjelmakoodisi tähän
         IsFullScreen = true;
         Level.Background.Image = taustaKuva;
         Level.Background.FitToLevel();
-
+        
         Pelaaja = new PhysicsObject(100.0, 100.0);
         Pelaaja.Shape = Shape.Circle;
-        Pelaaja.Color = Color.BloodRed;
         Pelaaja.Image = LoadImage("pelaaja");
         Add(Pelaaja);                          
-        Pelaaja.Mass = 80;  
+        Pelaaja.Mass = 80;
         PelaajanAse = new AssaultRifle(20, 5);
-        PelaajanAse.Ammo.Value = 9065;
+        PelaajanAse.Ammo.Value = 5000000;
         PelaajanAse.ProjectileCollision = AmmusOsui;
         Pelaaja.Add(PelaajanAse);
 
         PelaajaYlos();
         LuoPallo();
         LuoKentta();
+        
         PhoneBackButton.Listen(ConfirmExit, "Lopeta peli");
 
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
@@ -136,13 +126,18 @@ public class FysiikkaPeli1 : PhysicsGame
         {
 
             Explosion rajahdys = new Explosion(50);
-            rajahdys.Position = Pelaaja.Position;
-            Add(rajahdys);
-            Pelaaja.IgnoresExplosions = true;
-
-            Tormaaja.Destroy();
-            PelaajanAse.Destroy();
-
+           rajahdys.Position = Pelaaja.Position;
+        Add(rajahdys);
+           Pelaaja.IgnoresExplosions = true;
+         Tormaaja.Destroy();
+          PelaajanAse.Destroy();
+            Label nimi = new Label(4000, 4000, "hävisit DD:");
+           nimi.X = Screen.Left + 950;
+            nimi.Y = Screen.Top - 500;
+            nimi.Color = Color.BloodRed;
+            
+            nimi.Font = Font.DefaultLargeBold;
+            Add(nimi);
         }
     }
 }
